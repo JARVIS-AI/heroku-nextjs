@@ -23,22 +23,24 @@ https://nextjs.herokuapp.com
 
 ## Production deployment
 
-Once you have a [Next app working locally](https://github.com/zeit/next.js#how-to-use), you may deploy it for public access.
+Once you have a [Next app working locally](https://nextjs.org/docs/#setup), you may deploy it for public access.
 
-1. Add the [`heroku-postbuild`](https://devcenter.heroku.com/articles/nodejs-support#heroku-specific-build-steps) hook to automatically build the Next app on each deployment:
+1. Revise the `npm start` script to set the [web listener `$PORT`](https://devcenter.heroku.com/articles/dynos#local-environment-variables):
 
    Merge this entry into **package.json**:
 
    ```json
    {
      "scripts": {
-       "start": "next start -p $PORT",
-       "heroku-postbuild": "next build"
+       "dev": "next",
+       "build": "next build",
+       "start": "next start -p $PORT"
      }
    }
    ```
 
-   🌈 *In February 2017, [Next was fixed](https://github.com/zeit/next.js/pull/1164), so the **[Heroku build adapter](https://github.com/mars/heroku-nextjs-build/blob/master/bin/heroku-nextjs-build) is no longer required**.*
+   ⭐️ *In March 2019, [Heroku began running `npm run build` automatically](https://devcenter.heroku.com/changelog-items/1573), so the old `heroku-postbuild` script entry is no longer required.*
+
 1. Ensure the app is a git repo, ignoring local-only directories:
 
    ```bash
@@ -58,3 +60,9 @@ Once you have a [Next app working locally](https://github.com/zeit/next.js#how-t
    git push heroku master
    ```
 1. ♻️ Deploy changes: add, commit, & push again.
+
+## Custom Config
+
+Next itself supports build & runtime configuration through the [next.config.js](https://nextjs.org/docs/#exposing-configuration-to-the-server--client-side) file.
+
+Use environment variables ([Heroku config vars](https://devcenter.heroku.com/articles/config-vars)) within your React components, no rebuilds required! Simply set [next.config.js](https://nextjs.org/docs/#exposing-configuration-to-the-server--client-side) values from the server's environment using `process.env` object.
